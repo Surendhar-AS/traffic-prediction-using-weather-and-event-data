@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Abel' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Jolly Lodger' rel='stylesheet'>
+<style>
+body {
+  background: rgba(47, 220, 17, 0.757);
+}
+
+.form-box{
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+width: 800px;
+height: 600px;
+border-radius: 15px;
+background: #95e7e8;
+text-align: center;
+font-family: "open sans", cursive;
+color: red; 
+}
+.form-box1{
+position: absolute;
+top: 80%;
+left: 50%;
+transform: translate(-50%, -50%);
+width: 600px;
+height: 180px;
+border-radius: 15px;
+background: #dfec4b;
+text-align: center;
+font-family: "Roboto", cursive;
+color:black; 
+}
+
+.input-field {
+  width: 40%; 
+  padding: 10px; 
+  background: #f6f799;
+  border: none;
+  border-radius: 6px;
+  opacity: 0.6;
+  color: white;
+  font-weight: bold;
+  margin-top: 20px;
+  margin-left: 35px;
+  color: black;
+  
+}
+
+.input-field::placeholder {
+  color: black; 
+  font-weight: bolder;
+  font-family:"Ubuntu", cursive;
+}
+
+.a {
+  width: 40%; 
+  padding: 10px; 
+  background: linear-gradient(to right,#5093e5eb,rgba(217, 245, 117, 0.905));
+  border: none;
+  border-radius: 15px;
+  
+  color: black;
+  font-weight: bold;
+  font-family:"Abel", cursive;
+  margin-top: 20px;
+  margin-left: 50px;
+  transition: width 0.3s, background-color 0.3s;
+  font-size: 17px;
+}
+
+.a:hover,
+.a:active {
+  transform: scaleX(1.67);
+  background-color: red;
+  cursor: pointer;
+}
+
+
+
+</style>
+</head>
+<body>
+    <div class="form-box">
+        <form id="login" class="input-group">
+            <h1>TrafficGuard</h1>
+            <input class="input-field" placeholder="Date " name="uid" required>
+            <input class="input-field" placeholder="Time" name="uit" required>
+            <input class="input-field" placeholder="Arrival" name="uia" required>
+            <input class="input-field" placeholder="Departure" name="uip" required>
+            <br><br>
+            <button type="submit" class="a">Predict Traffic</button>
+        </form>
+        <div class="form-box1" id="output">
+          <h3>Predicted Traffic</h3>
+            <!-- Display captured values here -->
+        </div>
+    </div>
+    <script>
+        document.getElementById('login').addEventListener('submit', function (event) {
+            event.preventDefault();
+      
+            var form = document.getElementById('login');
+            var formData = new FormData(form);
+      
+            fetch('/submit', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Get the output div element
+                var outputDiv = document.getElementById('output');
+      
+                // Clear existing content
+                outputDiv.innerHTML = '<h3>Predicted Traffic</h3>';
+      
+                // Create a paragraph element to display predicted traffic
+                var p1 = document.createElement('p');
+                p1.textContent = 'Predicted Traffic: ' + data['Predicted Traffic'][0]; // First element is the predicted traffic label
+      
+                // Create a paragraph element to display interpretation
+                var p2 = document.createElement('p');
+                p2.textContent = 'Interpretation: ' + data['Predicted Traffic'][1]; // Second element is the interpretation
+      
+                // Append paragraphs to the output div
+                outputDiv.appendChild(p1);
+                outputDiv.appendChild(p2);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+      </script>            
+</body>
+</html>
